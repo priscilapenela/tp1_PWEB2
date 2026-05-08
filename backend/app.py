@@ -22,6 +22,17 @@ init_db()
 #CARRITO = []
 
 # --- Endpoints ---
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({
+        "mensaje": "API Sweet Frost funcionando",
+        "endpoints": {
+            "productos": "/api/productos",
+            "carrito": "/api/carrito",
+            "total": "/api/carrito/total",
+            "swagger": "/apidocs"
+        }
+    }), 200
 
 @app.route('/api/carrito', methods=['GET'])
 def obtener_carrito():
