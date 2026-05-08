@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://tp1-pweb2.onrender.com";
 const { createApp } = Vue;
 
 createApp({
