@@ -608,7 +608,7 @@ Start Command: gunicorn app:app
 URL del backend:
 
 ```txt
-LINK_BACKEND
+https://tp1-pweb2.onrender.com
 ```
 
 ---
@@ -620,7 +620,7 @@ Como el frontend es estático, se puede desplegar directamente la carpeta `front
 URL del frontend:
 
 ```txt
-LINK_FRONTEND
+https://soft-starship-0d1e96.netlify.app
 ```
 
 ---
