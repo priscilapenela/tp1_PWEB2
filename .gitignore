@@ -1,0 +1,23 @@
+# Python
+backend/venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# SQLite
+# Si querés subir la base, comentá esta línea
+backend/coffee_cart.db
+
+# Node / Playwright
+node_modules/
+e2e/node_modules/
+e2e/playwright-report/
+e2e/test-results/
+
+# Editor
+.vs/
+.vscode/
+.idea/
+
+# Env
+.env

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sweet Frost - Ice Cream Shop</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div id="app">
+        <div class="site">
+            <!-- NAVBAR -->
+            <header class="navbar">
+                <a href="#" class="brand">
+                    <span class="brand-icon">🍦</span>
+                    <span>Sweet Frost</span>
+                </a>
+
+                <div class="nav-cart">
+                    <span>{{ total.cantidad_items }} items</span>
+                    <strong>{{ formatearPrecio(total.total) }}</strong>
+                </div>
+            </header>
+
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-content">
+                    <span class="hero-pill">Nueva temporada dulce</span>
+
+                    <h1>Helados artesanales para hacer tu día más feliz</h1>
+
+                    <p>
+                        Descubrí sabores cremosos, frutales y súper coloridos. Armá tu pedido
+                        online y disfrutá una experiencia dulce desde casa.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#productos" class="btn btn-primary">Ver sabores</a>
+                        <a href="#carrito" class="btn btn-secondary">Ver carrito</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div>
+                            <strong>4.9</strong>
+                            <span>Rating</span>
+                        </div>
+                        <div>
+                            <strong>+1K</strong>
+                            <span>Pedidos</span>
+                        </div>
+                        <div>
+                            <strong>100%</strong>
+                            <span>Artesanal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="hero-blob"></div>
+
+                    <div class="cute-photo-card">
+                        <span class="cute-badge">Sweet special</span>
+
+                        <span class="floating-heart heart-1">❤</span>
+                        <span class="floating-heart heart-2">❤</span>
+                        <span class="floating-heart heart-3">❤</span>
+                        <span class="floating-heart heart-4">♡</span>
+                        <span class="floating-heart heart-5">❤</span>
+
+                        <img src="./assets/hero-icecream.png"
+                             alt="Helado aesthetic"
+                             class="cute-photo" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- BENEFICIOS -->
+            <section id="beneficios" class="benefits">
+                <article class="benefit-card">
+                    <span>🚚</span>
+                    <div>
+                        <h3>Entrega rápida</h3>
+                        <p>Tu pedido listo para disfrutar en pocos minutos.</p>
+                    </div>
+                </article>
+
+                <article class="benefit-card">
+                    <span>🍓</span>
+                    <div>
+                        <h3>Ingredientes frescos</h3>
+                        <p>Sabores preparados con frutas y cremas seleccionadas.</p>
+                    </div>
+                </article>
+
+                <article class="benefit-card">
+                    <span>💗</span>
+                    <div>
+                        <h3>Hecho con amor</h3>
+                        <p>Una experiencia dulce, cuidada y artesanal.</p>
+                    </div>
+                </article>
+            </section>
+
+            <div v-if="mensaje" class="toast">
+                {{ mensaje }}
+            </div>
+
+            <!-- MAIN SHOP -->
+            <section class="shop-layout">
+                <!-- PRODUCTOS -->
+                <main id="productos" class="products-area">
+                    <div class="section-header">
+                        <div>
+                            <span class="section-kicker">Nuestro menú</span>
+                            <h2>Sabores destacados</h2>
+                            <p>Elegí tus favoritos y agregalos a tu carrito.</p>
+                        </div>
+
+                        <div class="search-box">
+                            <span>🔎</span>
+                            <input type="text"
+                                   placeholder="Buscar sabor..."
+                                   v-model="busqueda" />
+                        </div>
+                    </div>
+
+                    <div v-if="cargando" class="loading-box">
+                        Cargando sabores...
+                    </div>
+
+                    <div v-else class="products-grid">
+                        <article class="product-card"
+                                 v-for="producto in productosFiltrados"
+                                 :key="producto.id">
+                            <div class="product-image">
+                                <img :src="getImagen(producto.id)"
+                                     :alt="producto.nombre" />
+                            </div>
+
+                            <div class="product-content">
+                                <span class="product-label">Popular</span>
+                                <h3>{{ producto.nombre }}</h3>
+                                <p>{{ getDescripcion(producto.id) }}</p>
+                            </div>
+
+                            <div class="product-footer">
+                                <strong>{{ formatearPrecio(producto.precio) }}</strong>
+                                <button type="button"
+                                        class="btn-small"
+                                        @click="agregarAlCarrito(producto.id)">
+                                    Agregar
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                </main>
+
+                <!-- CARRITO -->
+                <aside id="carrito" class="cart-area">
+                    <div class="cart-card">
+                        <div class="cart-title">
+                            <div>
+                                <span class="section-kicker">Tu pedido</span>
+                                <h2>Carrito</h2>
+                            </div>
+                            <span class="cart-count">{{ total.cantidad_items }}</span>
+                        </div>
+
+                        <div v-if="carrito.length === 0" class="empty-cart">
+                            <div class="empty-icon">🛍️</div>
+                            <h3>Tu carrito está vacío</h3>
+                            <p>Agregá un helado para comenzar tu pedido.</p>
+                        </div>
+
+                        <div v-else class="cart-list">
+                            <article class="cart-item"
+                                     v-for="item in carrito"
+                                     :key="item.id">
+                                <div class="cart-thumb">
+                                    <img :src="getImagen(item.producto_id)"
+                                         :alt="item.nombre" />
+                                </div>
+
+                                <div class="cart-info">
+                                    <h3>{{ item.nombre }}</h3>
+                                    <p>{{ item.cantidad }} x {{ formatearPrecio(item.precio) }}</p>
+                                    <strong>{{ formatearPrecio(item.subtotal) }}</strong>
+                                </div>
+
+                                <button type="button"
+                                        class="remove-btn"
+                                        @click="eliminarDelCarrito(item.producto_id)">
+                                    ×
+                                </button>
+                            </article>
+                        </div>
+
+                        <div class="summary">
+                            <div>
+                                <span>Subtotal</span>
+                                <strong>{{ formatearPrecio(total.total) }}</strong>
+                            </div>
+
+                            <div>
+                                <span>Envío</span>
+                                <strong>Gratis</strong>
+                            </div>
+
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <strong>{{ formatearPrecio(total.total) }}</strong>
+                            </div>
+
+                            <button type="button"
+                                    class="checkout-btn"
+                                    @click="finalizarCompra"
+                                    :disabled="procesandoCompra">
+                                {{ procesandoCompra ? "Procesando pedido..." : "Finalizar compra" }}
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <!-- ABOUT -->
+            <section class="about-section">
+                <div>
+                    <span class="section-kicker">Experiencia Sweet Frost</span>
+                    <h2>Una heladería digital simple, dulce y moderna</h2>
+                </div>
+                <p>
+                    Esta SPA consume una API REST desarrollada con Flask, guarda el carrito
+                    en SQLite y permite validar un flujo de compra completo desde la interfaz.
+                </p>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <p>Sweet Frost · TP PWEB2</p>
+                <span>Frontend Vue + Backend Flask + SQLite</span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
